@@ -199,8 +199,7 @@ class VideoProcessor:
 
 #streamlit run webrtc_3Dobject_size_detection.py
 # streamlit run C:\Users\niels\PycharmProjects\streamlit_webrtc\venv\webrtc_3Dobject_size_detection.py
-ctx = webrtc_streamer(key="example", video_processor_factory=VideoProcessor,rtc_configuration={  # Add this config
-        "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}])
+ctx = webrtc_streamer(key="example", video_processor_factory=VideoProcessor,rtc_configuration={ "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
 
 #if ctx.video_processor:
 #    ctx.video_processor
