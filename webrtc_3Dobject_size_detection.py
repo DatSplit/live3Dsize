@@ -3,7 +3,9 @@ import numpy as np
 import mediapipe as mp
 import cv2
 import av
-#from dbr import *
+from dbr import *
+
+# ok
 
 
 class VideoProcessor:
@@ -26,10 +28,14 @@ class VideoProcessor:
         self.length_cup_cm = 0
         self.width_cup_cm = 0
         self.height_cup_cm = 0
-        #self.text_QR = ""
-
+        self.text_QR = ""
+        # Initialize dynamsoft barcode reader, with free license code
+        BarcodeReader.init_license(
+            "t0068fQAAAHI/rXvj1Bb8Y7N1eyBkrcYMFl76F1uFyQW/d+tPuswp/Gv1UrxgC9FXCi2rH2KFXgPc2gjNQiQ8VKcJCWgkeoA="
+        )
+        reader = BarcodeReader()
         # Initialize empty string for QR-code text processing.
-        #self.splitted = ""
+        self.splitted = ""
         # Initialize MediaPipe drawing utils to draw the 3D bounding box around the object(s).
         mp_drawing = mp.solutions.drawing_utils
         # Initialize MediaPipe objectron to find the object and calculate the 3D bounding box.
@@ -53,24 +59,24 @@ class VideoProcessor:
                 min_tracking_confidence=0.99, ) as objectron:
 
             # Detect and decode QR-code from video frame
-            # results_QR = reader.decode_buffer(img)
-            #
-            # # If there is a QR code detected parse the text_result of the QR code
-            # if results_QR != None:
-            #     for text_result in results_QR:
-            #         tr = text_result.barcode_text
-            #
-            #         # Input text for each QR code is 2 columns of text and 5 rows.
-            #         # Merk Merk
-            #         # Materiaal Materiaal
-            #         # Verkoopprijs Verkoopprijs
-            #         # Gewicht Gewicht
-            #         # Soort Soort
-            #
-            #         # Each row is seperated by a \t, therefore replace the \t by an empty space to create one row.
-            #         self.splitted = tr.replace('\t', ' ')
-            #         # Each  previous row is seperated by a \n, therefore split it on \n to get the 5 individual rows.
-            #         self.splitted = self.splitted.split('\n')
+            results_QR = reader.decode_buffer(img)
+
+            # If there is a QR code detected parse the text_result of the QR code
+            if results_QR != None:
+                for text_result in results_QR:
+                    tr = text_result.barcode_text
+
+                    # Input text for each QR code is 2 columns of text and 5 rows.
+                    # Merk Merk
+                    # Materiaal Materiaal
+                    # Verkoopprijs Verkoopprijs
+                    # Gewicht Gewicht
+                    # Soort Soort
+
+                    # Each row is seperated by a \t, therefore replace the \t by an empty space to create one row.
+                    self.splitted = tr.replace('\t', ' ')
+                    # Each  previous row is seperated by a \n, therefore split it on \n to get the 5 individual rows.
+                    self.splitted = self.splitted.split('\n')
 
 
             # Color image from bgr to rgb
@@ -145,9 +151,9 @@ class VideoProcessor:
             image[440:, :] = [
                 88, 49, 14
             ]  # Create blue box at bottom of the videocapture
-            #image[780:990, 0:440] = [
-                #88, 49, 14
-            #]  # Create blue box at the left bottom corner for QR-code information
+            image[300:, 0:180] = [
+                88, 49, 14
+            ]  # Create blue box at the left bottom corner for QR-code information
 
             # Coordinates for the measurements (length,width,height) in the frame
             CenterCoordinates = (145, int((image.shape[0] / 2) + 460))
@@ -155,26 +161,26 @@ class VideoProcessor:
             # length of splitted is greater than 1 if there's a QR code detected, then put the text of the QR code
             # in the left bottom corner.
             # splitted[0] is the first row.
-            # if (len(self.splitted) > 1):
-            #     cv2.putText(image, self.splitted[0], (int(self.width_pixels * 0.01), int(self.height_pixels * 0.75)), 2,
-            #                 1,
-            #                 (255, 255, 255), 1)
-            #     cv2.putText(image, self.splitted[1],
-            #                 (int(self.width_pixels * 0.01), int(self.height_pixels * 0.75) + 30),
-            #                 2, 1,
-            #                 (255, 255, 255), 1)
-            #     cv2.putText(image, self.splitted[2],
-            #                 (int(self.width_pixels * 0.01), int(self.height_pixels * 0.75) + 60),
-            #                 2, 1,
-            #                 (255, 255, 255), 1)
-            #     cv2.putText(image, self.splitted[3],
-            #                 (int(self.width_pixels * 0.01), int(self.height_pixels * 0.75) + 90),
-            #                 2, 1,
-            #                 (255, 255, 255), 1)
-            #     cv2.putText(image, self.splitted[4],
-            #                 (int(self.width_pixels * 0.01), int(self.height_pixels * 0.75) + 120),
-            #                 2, 1,
-            #                 (255, 255, 255), 1)
+            if (len(self.splitted) > 1):
+                cv2.putText(image, self.splitted[0], (int(self.width_pixels * 0.01), int(self.height_pixels * 0.65)), 2,
+                            0.5,
+                            (255, 255, 255), 1)
+                cv2.putText(image, self.splitted[1],
+                            (int(self.width_pixels * 0.01), int(self.height_pixels * 0.65) + 30),
+                            2, 0.5,
+                            (255, 255, 255), 1)
+                cv2.putText(image, self.splitted[2],
+                            (int(self.width_pixels * 0.01), int(self.height_pixels * 0.65) + 60),
+                            2, 0.5,
+                            (255, 255, 255), 1)
+                cv2.putText(image, self.splitted[3],
+                            (int(self.width_pixels * 0.01), int(self.height_pixels * 0.65) + 90),
+                            2, 0.5,
+                            (255, 255, 255), 1)
+                cv2.putText(image, self.splitted[4],
+                            (int(self.width_pixels * 0.01), int(self.height_pixels * 0.65) + 120),
+                            2, 0.5,
+                            (255, 255, 255), 1)
 
             # Add length, width, height text in the middle bottom of the frame
             cv2.putText(
