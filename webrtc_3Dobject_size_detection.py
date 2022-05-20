@@ -29,6 +29,7 @@ class VideoProcessor:
         self.width_cup_cm = 0
         self.height_cup_cm = 0
         self.text_QR = ""
+        self.option = "Cup"
         # Initialize dynamsoft barcode reader, with free license code
         BarcodeReader.init_license(
             "t0068fQAAAHI/rXvj1Bb8Y7N1eyBkrcYMFl76F1uFyQW/d+tPuswp/Gv1UrxgC9FXCi2rH2KFXgPc2gjNQiQ8VKcJCWgkeoA="
@@ -52,7 +53,7 @@ class VideoProcessor:
         logo = cv2.cvtColor(logo, cv2.COLOR_RGB2BGR)
 
         with mp_objectron.Objectron(
-                model_name='Cup',
+                model_name=str(self.option),
                 static_image_mode=True,
                 max_num_objects=1,
                 min_detection_confidence=0.5,
@@ -201,5 +202,7 @@ class VideoProcessor:
 # streamlit run C:\Users\niels\PycharmProjects\streamlit_webrtc\venv\webrtc_3Dobject_size_detection.py
 ctx = webrtc_streamer(key="example", video_processor_factory=VideoProcessor,rtc_configuration={ "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
 
-#if ctx.video_processor:
-#    ctx.video_processor
+if ctx.video_processor:
+    ctx.video_processor.option = st.radio(
+        'You can change the object to detect and measure here.',
+        ('Cup', 'Chair', 'Shoe', 'Camera'))
