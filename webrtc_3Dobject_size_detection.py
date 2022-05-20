@@ -13,10 +13,6 @@ class VideoProcessor:
 
 
     def __init__(self) -> None:
-        self.ja = 10
-
-    def recv(self, frame):
-        img = frame.to_ndarray(format="bgr24")
         self.width_pixels = 640
         self.height_pixels = 480
         self.distance_to_object = 300
@@ -31,6 +27,10 @@ class VideoProcessor:
         self.height_cup_cm = 0
         self.text_QR = ""
         self.option = "Cup"
+
+    def recv(self, frame):
+        img = frame.to_ndarray(format="bgr24")
+        
         # Initialize dynamsoft barcode reader, with free license code
         BarcodeReader.init_license(
             "t0068fQAAAHI/rXvj1Bb8Y7N1eyBkrcYMFl76F1uFyQW/d+tPuswp/Gv1UrxgC9FXCi2rH2KFXgPc2gjNQiQ8VKcJCWgkeoA="
