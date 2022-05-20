@@ -6,8 +6,6 @@ import cv2
 import av
 from dbr import *
 
-# ok
-
 
 class VideoProcessor:
 
