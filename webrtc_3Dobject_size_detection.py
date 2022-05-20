@@ -22,7 +22,7 @@ class VideoProcessor:
         self.focal_length_camera = 3
         self.logo_width = 260
         self.logo_height = 65
-        self.logo = 'C:/Users/niels/Downloads/logo_wit.png'
+        self.logo = 'logo_wit.png'
         self.length_cup_cm = 0
         self.width_cup_cm = 0
         self.height_cup_cm = 0
