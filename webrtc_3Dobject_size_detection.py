@@ -1,6 +1,6 @@
 from streamlit_webrtc import webrtc_streamer
 import numpy as np
-import streamlite as st
+import streamlit as st
 import mediapipe as mp
 import cv2
 import av
