@@ -151,7 +151,7 @@ class VideoProcessor:
             image[440:, :] = [
                 88, 49, 14
             ]  # Create blue box at bottom of the videocapture
-            image[300:, 0:180] = [
+            image[300:, 0:230] = [
                 88, 49, 14
             ]  # Create blue box at the left bottom corner for QR-code information
 
