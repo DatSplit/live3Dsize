@@ -31,7 +31,7 @@ class VideoProcessor:
         
         # Initialize dynamsoft barcode reader, with free license code
         BarcodeReader.init_license(
-            "t0068fQAAAHI/rXvj1Bb8Y7N1eyBkrcYMFl76F1uFyQW/d+tPuswp/Gv1UrxgC9FXCi2rH2KFXgPc2gjNQiQ8VKcJCWgkeoA="
+            "t0072oQAAAIrwiekeA/dI+etDebeAtCdbwci4b60O4FYsO4ppPz2Ua1oujmfLyUP66Ob3C3SZYAmr2nr2nHTPayGBlg2v5JHMWCI1"
         )
         reader = BarcodeReader()
         # Initialize empty string for QR-code text processing.
