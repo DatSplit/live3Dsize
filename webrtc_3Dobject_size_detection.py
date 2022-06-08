@@ -11,28 +11,7 @@ class VideoProcessor:
     """
     A class used to do 3D size estimation, QR code detection and decoding of objects.
 
-    ...
-
-    Attributes
-    ----------
-    width_pixels : int
-        the desired width of the frame in pixels
-    height_pixels : int
-        the desired height of the frame in pixels
-    distance_to_object : int
-        the distance to the object in millimeters
-    sensor_height_y : float
-        the physical sensor height for the y-axis in millimeters
-    sensor_height_x : float
-        the physical sensor height for the x-axis in millimeters
-    focal_length_camera: float
-        the physical focal length of the camera in millimeters
-    logo: str
-        path to the desired company logo
-    logo_width: int
-        desired width of the logo in pixels
-    logo_height: int
-        desired height of the logo in pixels
+    
     Methods
     -------
     recv(self, frame)
