@@ -8,7 +8,37 @@ from dbr import *
 
 
 class VideoProcessor:
+    """
+    A class used to do 3D size estimation, QR code detection and decoding of objects.
 
+    ...
+
+    Attributes
+    ----------
+    width_pixels : int
+        the desired width of the frame in pixels
+    height_pixels : int
+        the desired height of the frame in pixels
+    distance_to_object : int
+        the distance to the object in millimeters
+    sensor_height_y : float
+        the physical sensor height for the y-axis in millimeters
+    sensor_height_x : float
+        the physical sensor height for the x-axis in millimeters
+    focal_length_camera: float
+        the physical focal length of the camera in millimeters
+    logo: str
+        path to the desired company logo
+    logo_width: int
+        desired width of the logo in pixels
+    logo_height: int
+        desired height of the logo in pixels
+    Methods
+    -------
+    recv(self, frame)
+        Processing function of the frame retrieved from the webcam and returns the annotated frame.
+
+    """
 
     def __init__(self) -> None:
         self.width_pixels = 640
@@ -27,8 +57,21 @@ class VideoProcessor:
         self.option = "Cup"
 
     def recv(self, frame):
+        """
+        Processes the frame retrieved from the webcam and returns the annotated frame.
+
+        Parameters
+        ----------
+        frame: class 'av.video.frame.VideoFrame'
+            The frame retrieved from the webcam
+
+        Returns
+        -------
+            the annotated frame
+        """
+        print(type(frame))
         img = frame.to_ndarray(format="bgr24")
-        
+
         # Initialize dynamsoft barcode reader, with free license code
         BarcodeReader.init_license(
             "t0072oQAAAIrwiekeA/dI+etDebeAtCdbwci4b60O4FYsO4ppPz2Ua1oujmfLyUP66Ob3C3SZYAmr2nr2nHTPayGBlg2v5JHMWCI1"
@@ -77,7 +120,6 @@ class VideoProcessor:
                     self.splitted = tr.replace('\t', ' ')
                     # Each  previous row is seperated by a \n, therefore split it on \n to get the 5 individual rows.
                     self.splitted = self.splitted.split('\n')
-
 
             # Color image from bgr to rgb
             image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -188,20 +230,18 @@ class VideoProcessor:
                        ' cm' + "  " + "Breedte: " + "{:.1f}".format(
                     (self.width_cup_cm)) + ' cm'
                                            "  " + "Hoogte: " + "{:.1f}".format(
-                    (self.height_cup_cm)) + ' cm', (10,465), 2,
+                    (self.height_cup_cm)) + ' cm', (10, 465), 2,
                 0.7, (255, 255, 255), 2)
 
         return av.VideoFrame.from_ndarray(image, format="bgr24")
 
 
-
-
-
-#streamlit run webrtc_3Dobject_size_detection.py
-# streamlit run C:\Users\niels\PycharmProjects\streamlit_webrtc\venv\webrtc_3Dobject_size_detection.py
-ctx = webrtc_streamer(key="example", video_processor_factory=VideoProcessor,rtc_configuration={ "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
+# Initialize the webrtc streamer from (https://github.com/whitphx/streamlit-webrtc). rtc_configuration is required for deployment in the cloud.
+ctx = webrtc_streamer(key="example", video_processor_factory=VideoProcessor,
+                      rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
 
 if ctx.video_processor:
+    # Add option to change the object that you want to identify while live streaming the camera.
     ctx.video_processor.option = st.radio(
         'You can change the object to detect and measure here.',
         ('Cup', 'Chair', 'Shoe', 'Camera'))
